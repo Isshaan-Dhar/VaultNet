@@ -1,0 +1,76 @@
+### Register user
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "username": "ishaan",
+  "password": "securepass123"
+}
+
+###  Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "ishaan",
+  "password": "securepass123"
+}
+
+### Store a secret (paste your token from login response below)
+POST http://localhost:8080/secrets
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+{
+  "name": "github_api_key",
+  "value": "ghp_supersecretvalue123456"
+}
+
+### Store a secret with TTL (60 seconds)
+POST http://localhost:8080/secrets
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+{
+  "name": "temp_session_key",
+  "value": "temp_value_expires_soon",
+  "ttl_seconds": 60
+}
+
+### List all secrets
+GET http://localhost:8080/secrets
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+### Retrieve a secret
+GET http://localhost:8080/secrets/github_api_key
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+### Rotate a secret
+PUT http://localhost:8080/secrets/github_api_key/rotate
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+{
+  "new_value": "ghp_rotated_new_value_9999"
+}
+
+### Retrieve again to confirm rotation
+GET http://localhost:8080/secrets/github_api_key
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+### Delete a secret
+DELETE http://localhost:8080/secrets/github_api_key
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+### Confirm deletion - should return 404
+GET http://localhost:8080/secrets/github_api_key
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTNkNzhiN2EtMzYyOS00NjdhLTlhYTQtMTI4N2NlM2U3M2RjIiwidXNlcm5hbWUiOiJpc2hhYW4iLCJ0b2tlbl9pZCI6IjEzZDc4YjdhLTM2MjktNDY3YS05YWE0LTEyODdjZTNlNzNkYzppc2hhYW46MjAyNi0wMy0xMyAyMToxMzoyNS45MzAyMTA0MDMgKzAwMDAgVVRDIG09KzkyOS4wNzk3NzM4NTAiLCJleHAiOjE3NzM1MjI4MDUsImlhdCI6MTc3MzQzNjQwNX0.-ZuJdfSYkAB742EUV9D6e7nR3x3tmpD48kqxpu489BU
+
+### Trigger auth failure anomaly - wrong password (run this 6 times)
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "ishaan",
+  "password": "wrongpassword"
+}

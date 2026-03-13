@@ -1,0 +1,4 @@
+.env
+go-service/vaultnet
+__pycache__/
+*.pyc
