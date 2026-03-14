@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 import logging
 import schedule
 import time
@@ -198,6 +199,17 @@ def detect_ip_anomaly(logs: list[dict]) -> list[AnomalyAlert]:
     return alerts
 
 
+def notify_go_service(alert: AnomalyAlert) -> None:
+    try:
+        requests.post(
+            "http://go-service:8080/internal/anomaly",
+            json={"anomaly_type": alert.alert_type, "severity": alert.severity},
+            timeout=2,
+        )
+    except requests.RequestException:
+        pass
+
+
 def run_analysis():
     log.info("Running audit log analysis cycle")
     try:
@@ -224,6 +236,8 @@ def run_analysis():
                 log.warning(f"ANOMALY [{alert.severity}] {alert.alert_type} — user: {alert.username}")
                 print(alert.to_json())
                 write_anomaly_to_db(conn, alert)
+                notify_go_service(alert)
+
 
         conn.close()
 
