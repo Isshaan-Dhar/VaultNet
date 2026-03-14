@@ -55,8 +55,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    ports:
-      - "8080:8080"
     networks:
       - vaultnet_net
     depends_on:
@@ -113,3 +111,18 @@ services:
       - vaultnet_net
     depends_on:
       - prometheus
+
+  nginx:
+    image: nginx:alpine
+    container_name: vaultnet_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - vaultnet_net
+    depends_on:
+      - go-service

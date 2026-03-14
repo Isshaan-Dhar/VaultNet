@@ -2,3 +2,4 @@
 go-service/vaultnet
 __pycache__/
 *.pyc
+nginx/certs/
