@@ -16,29 +16,16 @@ A self-hosted secrets and credential lifecycle management platform built with Go
 | Container Runtime | Docker + Docker Compose |
 
 ## Architecture
-```
-┌─────────────────────────────────────────────────────┐
-│                    Docker Network                    │
-│                                                      │
-│  ┌──────────────┐     ┌──────────────┐              │
-│  │  Go Service  │────▶│  PostgreSQL  │              │
-│  │  :8080       │     │  :5432       │              │
-│  └──────┬───────┘     └──────────────┘              │
-│         │                    ▲                       │
-│         │             ┌──────┴───────┐              │
-│         │             │Python Sidecar│              │
-│         │             └──────────────┘              │
-│         │                                           │
-│  ┌──────▼───────┐     ┌──────────────┐              │
-│  │    Redis     │     │  Prometheus  │              │
-│  │  :6379       │     │  :9090       │              │
-│  └──────────────┘     └──────┬───────┘              │
-│                              │                       │
-│                       ┌──────▼───────┐              │
-│                       │   Grafana    │              │
-│                       │  :3000       │              │
-│                       └──────────────┘              │
-└─────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    Client["Client"] -->|"HTTPS :443 / HTTP :80 (→301)"| nginx["nginx\nTLS Termination"]
+    nginx -->|"HTTP proxy"| go["Go Service\nchi REST API"]
+    go -->|"AES-256-GCM\nread/write"| pg["PostgreSQL 16\nusers · secrets · audit_log"]
+    go -->|"JWT blacklist\nTTL expiry"| redis["Redis 7"]
+    go -->|"expose /metrics"| prom["Prometheus\nscrapes :8080/metrics"]
+    prom --> grafana["Grafana\nDashboard"]
+    pg -->|"audit log reads"| sidecar["Python Sidecar\nAnomaly Detector"]
+    sidecar -->|"POST /internal/anomaly"| go
 ```
 
 ## API Endpoints
@@ -110,8 +97,8 @@ The Python sidecar analyses the audit log every 60 seconds and flags:
 |---|---|
 | Grafana Dashboard | http://localhost:3000 (admin/admin) |
 | Prometheus | http://localhost:9090 |
-| API Health | http://localhost:8080/health |
-| API Metrics | http://localhost:8080/metrics |
+| API Health (via nginx) | https://localhost/health |
+| API Metrics (via nginx) | https://localhost/metrics |
 
 ## Security Properties
 
